@@ -54,7 +54,6 @@ body{
   background: rgba(232, 115, 6, 0.5);
 }
 
-
 .buttons{
   height: 10%;
   width: 100%;
@@ -91,7 +90,7 @@ body{
   font-size: 1.8em;
 }
 div[class^='col']{
-  width: 14.28%;
+  width: 14.281%;
   display: flex;
   flex-flow: column wrap;
   justify-content: flex-end;

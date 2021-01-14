@@ -96,9 +96,19 @@ function getCell(matrix, y, x) {
 
 
 let adyacentes = (surroundings(grid,0,0))
+let up = (adyacentes.up)
+let right = (adyacentes.right)
+let down = (adyacentes.down)
+let left = (adyacentes.left)
 
-console.log(adyacentes.down)
 
+if(down == grid[0][1]){
+
+    console.log(down +" " + grid[0][1]) 
+
+
+alert("si")
+}
  /*
 var box = $(".candy");
 var mainCanvas = $(".panel-tablero");

@@ -43,73 +43,63 @@ $(document).ready(function () {
 
     }
 
- 
-    //hacer los dulces drag
+//---------------------
 
-    //$( ".candy" ).draggable();
-
-    //intercambiar dulces
-/*
-   $.fn.swapWith = function(to) {
-        return this.each(function() {
-            var copy_to = $(to).clone();
-            var copy_from = $(this).clone();
-            $(to).replaceWith(copy_from);
-            $(this).replaceWith(copy_to);
-        });
-    };
+var rows=7; 
+var cols = 7; 
+var grid = []; 
+var validFigures=0;
+var score = 0;
+var moves = 0;
 
 
-    options = { revert: true };
-
-    $(".candy").draggable(options);
-
-    $('.panel-tablero').droppable({
-        drop: function(event, ui) {
-       window.setTimeout(function(){
-            $('#c10').swapWith($('#c20'));
-           $(".candy").draggable(options);
-       }, 600);
+    for (var r = 0; r < rows; r++) {
+        grid[r]=[];
+        for (var c =0; c< cols; c++) {
+           grid[r][c]= numRandom()
         }
-    });
+       }
 
+       console.log(grid)
 
-    $(".candy").click(function(){
+       // ... Matrix declaration goes here
 
-        console.log($(this).attr("id"))
-    })
-
-    $(".candy").mousedown(function(){
-        $(this).mousedown(console.log("si"))
-    })
-*/
-
-/*
-$.fn.swap = function (elem) {
-    elem = elem.jquery ? elem : $(elem);
-    return this.each(function () {
-        $(document.createTextNode('')).insertBefore(this).before(elem.before(this)).remove();
-    });
-};
-
-$(".candy").draggable();
-
-$('.panel-tablero').droppable({
-    drop: function(event, ui) {
-   window.setTimeout(function(){
-        $('#c10').swap($('#c20'));
-        $(".candy").draggable();
-   }, 600);
+function getCell(matrix, y, x) {
+    var NO_VALUE = null;
+    var value, hasValue;
+    
+    try {
+      hasValue = matrix[y][x] !== undefined;
+      value    = hasValue?  matrix[y][x] : NO_VALUE;
+    } catch(e) {
+      value    = NO_VALUE;
     }
-})
+  
+    return value;
+  }
+
+  function surroundings(matrix, y, x) {
+    // Directions are clockwise
+    return {
+      up:        getCell(matrix, y-1, x),
+      upRight:   getCell(matrix, y-1, x+1),
+      right:     getCell(matrix, y,   x+1),
+      downRight: getCell(matrix, y+1, x+1),
+      down:      getCell(matrix, y+1, x),
+      downLeft:  getCell(matrix, y+1, x-1),
+      left:      getCell(matrix, y,   x-1),
+      upLeft:    getCell(matrix, y-1, x-1)
+    }
+  }
 
 
 
-$('#c30').click(function () {
-    $('#c10').swap('#c20');
-});
-*/
 
+let adyacentes = (surroundings(grid,0,0))
+
+console.log(adyacentes.down)
+
+ /*
 var box = $(".candy");
 var mainCanvas = $(".panel-tablero");
 
@@ -156,5 +146,5 @@ box.droppable({
 });
 
 
-
+*/
 })

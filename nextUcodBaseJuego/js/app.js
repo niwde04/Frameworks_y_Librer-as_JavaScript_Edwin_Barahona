@@ -43,73 +43,118 @@ $(document).ready(function () {
 
     }
 
-//---------------------
+    //---------------------
 
-var rows=7; 
-var cols = 7; 
-var grid = []; 
-var validFigures=0;
-var score = 0;
-var moves = 0;
+    var rows = 7;
+    var cols = 7;
+    var grid = [];
+    var validFigures = 0;
+    var score = 0;
+    var moves = 0;
 
 
     for (var r = 0; r < rows; r++) {
-        grid[r]=[];
-        for (var c =0; c< cols; c++) {
-           grid[r][c]= numRandom()
+        grid[r] = [];
+        for (var c = 0; c < cols; c++) {
+            grid[r][c] = numRandom()
         }
-       }
-
-       console.log(grid)
-
-       // ... Matrix declaration goes here
-
-function getCell(matrix, y, x) {
-    var NO_VALUE = null;
-    var value, hasValue;
-    
-    try {
-      hasValue = matrix[y][x] !== undefined;
-      value    = hasValue?  matrix[y][x] : NO_VALUE;
-    } catch(e) {
-      value    = NO_VALUE;
     }
-  
-    return value;
-  }
 
-  function surroundings(matrix, y, x) {
-    // Directions are clockwise
-    return {
-      up:        getCell(matrix, y-1, x),
-      upRight:   getCell(matrix, y-1, x+1),
-      right:     getCell(matrix, y,   x+1),
-      downRight: getCell(matrix, y+1, x+1),
-      down:      getCell(matrix, y+1, x),
-      downLeft:  getCell(matrix, y+1, x-1),
-      left:      getCell(matrix, y,   x-1),
-      upLeft:    getCell(matrix, y-1, x-1)
+    console.log(grid)
+
+    // ... Matrix declaration goes here
+
+    function getCell(matrix, y, x) {
+        var NO_VALUE = null;
+        var value, hasValue;
+
+        try {
+            hasValue = matrix[y][x] !== undefined;
+            value = hasValue ? matrix[y][x] : NO_VALUE;
+        } catch (e) {
+            value = NO_VALUE;
+        }
+
+        return value;
     }
-  }
+
+    function surroundings(matrix, y, x) {
+        // Directions are clockwise
+        return {
+            up: {
+                value: getCell(matrix, y - 1, x),
+                index: [y - 1, x]
+            },
+
+            right: {
+                value: getCell(matrix, y, x + 1),
+                index: [y, x + 1]
+            },
+
+            down: {
+                value: getCell(matrix, y + 1, x),
+                index: [y + 1, x]
+
+            },
+
+            left: {
+                value: getCell(matrix, y, x - 1),
+                index: [y + "-" + x - 1]
+
+            }
+            // upRight:   getCell(matrix, y-1, x+1),
+            //downRight: getCell(matrix, y+1, x+1),
+            //downLeft:  getCell(matrix, y+1, x-1),
+            //upLeft:    getCell(matrix, y-1, x-1)
+        }
+    }
 
 
 
+    var adyacentes;
+    var combo = [];
 
-let adyacentes = (surroundings(grid,0,0))
-let up = (adyacentes.up)
-let right = (adyacentes.right)
-let down = (adyacentes.down)
-let left = (adyacentes.left)
+    /*  let up = (adyacentes.up)
+      let right = (adyacentes.right)
+      let down = (adyacentes.down)
+      let left = (adyacentes.left)
+
+     */
+
+    // buscando combos.
+
+    //arriba y abajo
+
+    for (var y = 0; y < rows; y++) {
+
+        for (var x = 0; x < cols; x++) {
+
+            adyacentes = (surroundings(grid, y, x))
+
+            let up = adyacentes.up.value
+
+            if (up == grid[y][x]) {
+
+                combo.push(  y+"-"+x+"/"+adyacentes.up.index)
+               
+            }
+            
+        }
+    }
+
+    console.log(combo)
+
+    /*
+    if(up.value == grid[5][5]){
+
+        console.log() 
 
 
-if(down == grid[0][1]){
+    alert("si")
+    }
+    */
 
-    console.log(down +" " + grid[0][1]) 
-
-
-alert("si")
-}
- /*
+    /*
 var box = $(".candy");
 var mainCanvas = $(".panel-tablero");
 

@@ -35,28 +35,28 @@ var altoCelda = alto / 7;
 
 $(document).ready(function () {
 
-    for (var r = 0; r <= 7; r++) {
+   /* for (var r = 0; r <= 7; r++) {
 
         for (var c = 0; c <= 6; c++) {
             $(".col-" + r).append('<img src="image/' + numRandom() + '.png" class="candy" style="height:' + altoCelda + 'px" id=c' + r + '' + c + ' /> ');
         }
 
-    }
+    }*/
 
     //---------------------
 
     var rows = 7;
     var cols = 7;
     var grid = [];
-    var validFigures = 0;
-    var score = 0;
-    var moves = 0;
-
-
+  
     for (var r = 0; r < rows; r++) {
         grid[r] = [];
         for (var c = 0; c < cols; c++) {
+
             grid[r][c] = numRandom()
+
+            $(".col-" + (c+1)).append('<img src="image/' + grid[r][c] + '.png" class="candy" style="height:' + altoCelda + 'px; position: static;";  id='+ grid[r][c] +' /> ');
+           // console.log(grid[r][c])
         }
     }
 
@@ -83,7 +83,7 @@ $(document).ready(function () {
         return {
             up: {
                 value: getCell(matrix, y - 1, x),
-                index: [y - 1, x]
+                index: [y - 1 + "-" + x]
             },
 
             right: {
@@ -112,7 +112,7 @@ $(document).ready(function () {
 
 
     var adyacentes;
-    var combo = [];
+
 
     /*  let up = (adyacentes.up)
       let right = (adyacentes.right)
@@ -123,38 +123,47 @@ $(document).ready(function () {
 
     // buscando combos.
 
-    //arriba y abajo
+    function combos(h) {
+        let combo = [];
 
-    for (var y = 0; y < rows; y++) {
+        for (let y = 0; y < rows; y++) {
 
-        for (var x = 0; x < cols; x++) {
+            for (let x = 0; x < cols; x++) {
 
-            adyacentes = (surroundings(grid, y, x))
+                adyacentes = (surroundings(grid, y, x))
 
-            let up = adyacentes.up.value
+                var up = adyacentes.up.value
 
-            if (up == grid[y][x]) {
+                if (up == grid[y][x]) {
 
-                combo.push(  y+"-"+x+"/"+adyacentes.up.index)
-               
+                    let pcombo = (y + "-" + x + "/" + adyacentes.up.index)
+                    let nuevoAdyacente = adyacentes.up.index + ''
+                    let adyacenteYX = nuevoAdyacente.split('-');
+
+                    adyacentes = (surroundings(grid, adyacenteYX[0], adyacenteYX[1]))
+
+                    if (up == adyacentes.up.value) {
+
+                        combo.push(pcombo + "/" + adyacentes.up.index)
+                       
+                    }
+                   
+                }
+                
             }
-            
+           
         }
+        return combo;
     }
 
-    console.log(combo)
 
-    /*
-    if(up.value == grid[5][5]){
+    let comboV = combos("up");
+    let comboH = combos("left");
 
-        console.log() 
+    console.log(comboV)
+    console.log(comboH)
 
-
-    alert("si")
-    }
-    */
-
-    /*
+ /*
 var box = $(".candy");
 var mainCanvas = $(".panel-tablero");
 

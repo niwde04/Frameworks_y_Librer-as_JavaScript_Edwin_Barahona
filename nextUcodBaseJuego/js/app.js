@@ -35,14 +35,7 @@ var altoCelda = alto / 7;
 
 $(document).ready(function () {
 
-   /* for (var r = 0; r <= 7; r++) {
-
-        for (var c = 0; c <= 6; c++) {
-            $(".col-" + r).append('<img src="image/' + numRandom() + '.png" class="candy" style="height:' + altoCelda + 'px" id=c' + r + '' + c + ' /> ');
-        }
-
-    }*/
-
+  
     //---------------------
 
     var rows = 7;
@@ -51,12 +44,13 @@ $(document).ready(function () {
   
     for (var r = 0; r < rows; r++) {
         grid[r] = [];
+        $(".panel-tablero").append('<div class= "row-'+r+'" ></>')
+
         for (var c = 0; c < cols; c++) {
 
             grid[r][c] = numRandom()
 
-            $(".col-" + (c+1)).append('<img src="image/' + grid[r][c] + '.png" class="candy" style="height:' + altoCelda + 'px; position: static;";  id='+ grid[r][c] +' /> ');
-           // console.log(grid[r][c])
+            $(".row-"+r+"").append('<div class="col-'+c+'"> <img src="image/' + grid[r][c] + '.png" class="candy" style="height:' + altoCelda + 'px; position: absolute"  id='+ grid[r][c] +' /></div>')
         }
     }
 
@@ -161,9 +155,9 @@ $(document).ready(function () {
     let comboH = combos("left");
 
     console.log(comboV)
-    console.log(comboH)
+    //console.log(comboH)
 
- /*
+ 
 var box = $(".candy");
 var mainCanvas = $(".panel-tablero");
 
@@ -177,7 +171,7 @@ box.draggable({
             opacity: 0
         });
 
-     //  $(".box").css("z-index", "0");
+       $(".candy").css("z-index", "0");
     },
 
     stop: function () {
@@ -210,5 +204,5 @@ box.droppable({
 });
 
 
-*/
+
 })

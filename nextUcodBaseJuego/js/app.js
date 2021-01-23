@@ -224,7 +224,7 @@ $(document).ready(function () {
 
         for (let y = 0; y < rows; y++) {
 
-            for (let x = 0; x < cols; x++) {
+            for  (let x = 0; x < cols; x++) {
 
                 let adyacentes = (surroundings(grid, y, x));
                 let down = adyacentes.down.value;
@@ -234,9 +234,11 @@ $(document).ready(function () {
 
                     grid[index[0]][index[1]] = grid[y][x]
 
-                    $("#" + y + "-" + x + "").appendTo("#d" + index[0] + "-" + index[1] + "")
+                    await renderCandy(y,x,index[0],index[1])
 
                     grid[y][x] = 0
+                   
+                    
                     
                 }
                 
@@ -250,14 +252,20 @@ $(document).ready(function () {
 
     //render Dulces a espacios vacios
 
-    function renderCandy(y1,x1,y2,x2){
+   function renderCandy (y1,x1,y2,x2){
 
-        $("#" + y + "-" + x + "").appendTo("#d" + index[0] + "-" + index[1] + "")
+    
+        $("#" + y1 + "-" + x1 + "").appendTo("#d" + y2 + "-" + x2 + "")
+        $("#" + y2 + "-" + x2 + "").remove();
+
+        $("#" + y1 + "-" + x1 + "").attr("id", y2 + "-" + x2)  
+
     }
    
-    $('.btn-reinicio').click(function () {
-        moverDulcesAdestruidos();
-        console.log(grid)
+
+    $('.btn-reinicio').click(  function () {
+           moverDulcesAdestruidos();
+         console.log(grid)
     });
 
 

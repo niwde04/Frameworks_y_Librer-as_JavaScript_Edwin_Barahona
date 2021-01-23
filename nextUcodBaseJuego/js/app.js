@@ -254,10 +254,8 @@ $(document).ready(function () {
 
    function renderCandy (y1,x1,y2,x2){
 
-    
         $("#" + y1 + "-" + x1 + "").appendTo("#d" + y2 + "-" + x2 + "")
         $("#" + y2 + "-" + x2 + "").remove();
-
         $("#" + y1 + "-" + x1 + "").attr("id", y2 + "-" + x2)  
 
     }

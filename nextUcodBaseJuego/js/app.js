@@ -30,10 +30,6 @@ function quitarDuplicados(arreglo) {
     return result
 }
 
-
-
-
-
 colorTituloBlanco()
 
 //funcion numero aleatorio
@@ -68,13 +64,13 @@ $(document).ready(function () {
 
             grid[r][c] = numRandom()
 
-            $(".row-" + r + "").append('<div class="col-' + c + '"; id="d' + r + '-' + c + '"> <img src="image/' + grid[r][c] + '.png" class="candy" style="height:' + altoCelda + 'px; position: absolute"  id=' + r + '-' + c + ' /></div>')
+            $(".row-" + r + "").append('<div class="col-' + c + '"; id="d' + r + '-' + c + '"> <img src="image/' + grid[r][c] + '.png" class="candy" style="height:' + altoCelda + 'px; position: absolute"  id=' + r + '-' + c + '></div>')
         }
     }
 
     console.log(grid)
 
-    // ... Matrix declaration goes here
+  // funcion buscar adyacentes 
 
     function getCell(matrix, y, x) {
         var NO_VALUE = null;
@@ -125,14 +121,6 @@ $(document).ready(function () {
 
     var adyacentes;
 
-
-    /*  let up = (adyacentes.up)
-      let right = (adyacentes.right)
-      let down = (adyacentes.down)
-      let left = (adyacentes.left)
-
-     */
-
     // buscando combos.
 
     function combos(h) {
@@ -176,7 +164,8 @@ $(document).ready(function () {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    sleep(1000).then(() => {
+
+    function destruirCombos(){
 
         let comboV = combos("up");
         let comboH = combos("left");
@@ -189,6 +178,7 @@ $(document).ready(function () {
         let combosLimpios = quitarDuplicados(comboVS3)
 
         console.log(combosLimpios)
+        console.log(grid)
 
         for (var i = 0; i < combosLimpios.length; i++) {
 
@@ -201,11 +191,52 @@ $(document).ready(function () {
 
         }
 
+        if(combosLimpios.length>1){
+            sleep(500).then(() => {
+            moverDulcesAdestruidos()
+            })
+        } 
+       
+    }
 
 
-    });
+    //mover dulces a espacios destruidos.
+    async function moverDulcesAdestruidos() {
 
-    $.fn.animateAppendTo = function (sel, speed) {
+        for (let steps = 0; steps < 6; steps++) {
+
+        for (let y = 0; y < rows; y++) {
+
+            for (let x = 0; x < cols; x++) {
+
+                let adyacentes = (surroundings(grid, y, x));
+                let down = adyacentes.down.value;
+                let index = adyacentes.down.index;
+
+                if (down == 0 && grid[y][x] > 0) {
+
+                    grid[index[0]][index[1]] = grid[y][x]
+                    await renderCandy(y, x, index[0], index[1])
+                    grid[y][x] = 0
+
+                }
+
+            }
+        }
+       
+    }
+
+    sleep(500).then(() => {
+       
+        llenarEspaciosVacios(grid)
+        
+    }) 
+   
+    return (grid)
+
+    }
+
+   /* $.fn.animateAppendTo = function (sel, speed) {
         var $this = this,
             newEle = $this.clone(true).appendTo(sel),
             newPos = newEle.position();
@@ -215,71 +246,49 @@ $(document).ready(function () {
             $this.remove();
         });
         return newEle;
-    };
-
- 
-
-    //mover dulces a espacios destruidos.
-    async function moverDulcesAdestruidos()  {
-
-        for (let y = 0; y < rows; y++) {
-
-            for  (let x = 0; x < cols; x++) {
-
-                let adyacentes = (surroundings(grid, y, x));
-                let down = adyacentes.down.value;
-                let index = adyacentes.down.index;
-
-                if (down == 0 && grid[y][x] > 0) {
-
-                    grid[index[0]][index[1]] = grid[y][x]
-
-                    await renderCandy(y,x,index[0],index[1])
-
-                    grid[y][x] = 0
-                   
-                    
-                    
-                }
-                
-            }
-        }
-
-        return grid
-
-    }
+    };*/
 
 
     //render Dulces a espacios vacios
 
-   function renderCandy (y1,x1,y2,x2){
+    function renderCandy(y1, x1, y2, x2) {
 
         $("#" + y1 + "-" + x1 + "").appendTo("#d" + y2 + "-" + x2 + "")
         $("#" + y2 + "-" + x2 + "").remove();
-        $("#" + y1 + "-" + x1 + "").attr("id", y2 + "-" + x2)  
-
+        $("#" + y1 + "-" + x1 + "").attr("id", y2 + "-" + x2)
     }
-   
 
-    $('.btn-reinicio').click(  function () {
-           moverDulcesAdestruidos();
-         console.log(grid)
+
+    $('.btn-reinicio').click(function () {
+
+            destruirCombos()
+           // moverDulcesAdestruidos();
+           // console.log(grid)
+     
     });
 
 
+    //llenar espacios vacios
 
 
+    function llenarEspaciosVacios(arreglo){
 
-    // 
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                if(arreglo[r][c] === 0){
+                    grid[r][c] = numRandom()
+                    $("#" + r + "-" + c + "").remove();
 
+                    $("#d"+r+"-"+c+"").append('<img src="image/' + grid[r][c] + '.png" class="candy" style="height:' + altoCelda + 'px; position: absolute;"  id=' + r + '-' + c + '>')
+                
+                }
+            }
+        }
+        sleep(500).then(() => {
+        destruirCombos()
+        })
 
-
-    //agregar ceros a espacios vacios
-
-
-
-
-
+    }
 
 
     //Mover dulces con el mouse

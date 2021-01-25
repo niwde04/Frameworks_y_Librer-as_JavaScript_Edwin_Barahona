@@ -64,13 +64,14 @@ $(document).ready(function () {
 
             grid[r][c] = numRandom()
 
-            $(".row-" + r + "").append('<div class="col-' + c + '"; id="d' + r + '-' + c + '"> <img src="image/' + grid[r][c] + '.png" class="candy" style="height:' + altoCelda + 'px; position: absolute"  id=' + r + '-' + c + '></div>')
+            $(".row-" + r + "").append('<div class="col-' + c + '" id="d' + r + '-' + c + '"> <img src="image/' + grid[r][c] + '.png" class="candy" style="height:' + altoCelda + 'px; position: absolute"  id=' + r + '-' + c + '></div>')
+       
         }
     }
 
     console.log(grid)
 
-  // funcion buscar adyacentes 
+    // funcion buscar adyacentes 
 
     function getCell(matrix, y, x) {
         var NO_VALUE = null;
@@ -165,7 +166,7 @@ $(document).ready(function () {
     }
 
 
-    function destruirCombos(){
+    function destruirCombos() {
 
         let comboV = combos("up");
         let comboH = combos("left");
@@ -191,12 +192,15 @@ $(document).ready(function () {
 
         }
 
-        if(combosLimpios.length>1){
+        if (combosLimpios.length > 1) {
             sleep(500).then(() => {
-            moverDulcesAdestruidos()
+                moverDulcesAdestruidos()
             })
-        } 
-       
+        }else{
+            
+         
+        }
+
     }
 
 
@@ -205,50 +209,50 @@ $(document).ready(function () {
 
         for (let steps = 0; steps < 6; steps++) {
 
-        for (let y = 0; y < rows; y++) {
+            for (let y = 0; y < rows; y++) {
 
-            for (let x = 0; x < cols; x++) {
+                for (let x = 0; x < cols; x++) {
 
-                let adyacentes = (surroundings(grid, y, x));
-                let down = adyacentes.down.value;
-                let index = adyacentes.down.index;
+                    let adyacentes = (surroundings(grid, y, x));
+                    let down = adyacentes.down.value;
+                    let index = adyacentes.down.index;
 
-                if (down == 0 && grid[y][x] > 0) {
+                    if (down == 0 && grid[y][x] > 0) {
 
-                    grid[index[0]][index[1]] = grid[y][x]
-                    await renderCandy(y, x, index[0], index[1])
-                    grid[y][x] = 0
+                        grid[index[0]][index[1]] = grid[y][x]
+                        await renderCandy(y, x, index[0], index[1])
+                        grid[y][x] = 0
+
+                    }
 
                 }
-
             }
+
         }
-       
-    }
 
-    sleep(500).then(() => {
-       
-        llenarEspaciosVacios(grid)
-        
-    }) 
-   
-    return (grid)
+        sleep(500).then(() => {
+
+            llenarEspaciosVacios(grid)
+
+        })
+
+        return (grid)
 
     }
 
-   /* $.fn.animateAppendTo = function (sel, speed) {
-        var $this = this,
-            newEle = $this.clone(true).appendTo(sel),
-            newPos = newEle.position();
-        newEle.hide();
-        $this.css('position', 'absolute').animate(newPos, speed, function () {
-            newEle.show();
-            $this.remove();
-        });
-        return newEle;
-    };*/
 
 
+    /* $.fn.animateAppendTo = function (sel, speed) {
+         var $this = this,
+             newEle = $this.clone(true).appendTo(sel),
+             newPos = newEle.position();
+         newEle.hide();
+         $this.css('position', 'absolute').animate(newPos, speed, function () {
+             newEle.show();
+             $this.remove();
+         });
+         return newEle;
+     };*/
     //render Dulces a espacios vacios
 
     function renderCandy(y1, x1, y2, x2) {
@@ -261,33 +265,42 @@ $(document).ready(function () {
 
     $('.btn-reinicio').click(function () {
 
-            destruirCombos()
-           // moverDulcesAdestruidos();
-           // console.log(grid)
-     
+        destruirCombos()
+       
+        // moverDulcesAdestruidos();
+        // console.log(grid)
+
     });
 
+
+    
+   
+        $(".candy").click(function(){
+            alert($(this).attr("class"))
+
+        })
 
     //llenar espacios vacios
 
 
-    function llenarEspaciosVacios(arreglo){
+    function llenarEspaciosVacios(arreglo) {
 
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < cols; c++) {
-                if(arreglo[r][c] === 0){
+                if (arreglo[r][c] === 0) {
                     grid[r][c] = numRandom()
                     $("#" + r + "-" + c + "").remove();
-
-                    $("#d"+r+"-"+c+"").append('<img src="image/' + grid[r][c] + '.png" class="candy" style="height:' + altoCelda + 'px; position: absolute;"  id=' + r + '-' + c + '>')
+                    $("#d" + r + "-" + c + "").append('<img src="image/' + grid[r][c] + '.png" class="candy" style="height:' + altoCelda + 'px;  position: absolute;"  id=' + r + '-' + c + '>')
+                    
+                   
                 
                 }
             }
         }
         sleep(500).then(() => {
-        destruirCombos()
+            destruirCombos()
         })
-
+      
     }
 
 
@@ -295,47 +308,52 @@ $(document).ready(function () {
     var box = $(".candy");
     var mainCanvas = $(".panel-tablero");
 
+    function hacer(){
 
-    box.draggable({
-        containment: mainCanvas,
-        helper: "clone",
+        box.draggable({
+            containment: mainCanvas,
+            helper: "clone",
+    
+            start: function () {
+                $(this).css({
+                    opacity: 0
+                });
+    
+                $(".candy").css("z-index", "0");
+            },
+    
+            stop: function () {
+                $(this).css({
+                    opacity: 3
+                });
+            }
+        });
+    
+        box.droppable({
+            accept: box,
+    
+            drop: function (event, ui) {
+                var draggable = ui.draggable;
+                var droppable = $(this);
+                var dragPos = draggable.position();
+                var dropPos = droppable.position();
+    
+                draggable.css({
+                    left: dropPos.left + "px",
+                    top: dropPos.top + "px",
+                    "z-index": 20
+                });
+    
+                droppable.css("z-index", 10).animate({
+                    left: dragPos.left,
+                    top: dragPos.top
+                });
+            }
+        });
+    }
 
-        start: function () {
-            $(this).css({
-                opacity: 0
-            });
 
-            $(".candy").css("z-index", "0");
-        },
-
-        stop: function () {
-            $(this).css({
-                opacity: 3
-            });
-        }
-    });
-
-    box.droppable({
-        accept: box,
-
-        drop: function (event, ui) {
-            var draggable = ui.draggable;
-            var droppable = $(this);
-            var dragPos = draggable.position();
-            var dropPos = droppable.position();
-
-            draggable.css({
-                left: dropPos.left + "px",
-                top: dropPos.top + "px",
-                "z-index": 20
-            });
-
-            droppable.css("z-index", 10).animate({
-                left: dragPos.left,
-                top: dragPos.top
-            });
-        }
-    });
+   
 
 
 

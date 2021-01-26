@@ -65,7 +65,7 @@ $(document).ready(function () {
             grid[r][c] = numRandom()
 
             $(".row-" + r + "").append('<div class="col-' + c + '" id="d' + r + '-' + c + '"> <img src="image/' + grid[r][c] + '.png" class="candy" style="height:' + altoCelda + 'px; position: absolute"  id=' + r + '-' + c + '></div>')
-       
+
         }
     }
 
@@ -196,9 +196,9 @@ $(document).ready(function () {
             sleep(500).then(() => {
                 moverDulcesAdestruidos()
             })
-        }else{
-            
-         
+        } else {
+
+
         }
 
     }
@@ -260,25 +260,26 @@ $(document).ready(function () {
         $("#" + y1 + "-" + x1 + "").appendTo("#d" + y2 + "-" + x2 + "")
         $("#" + y2 + "-" + x2 + "").remove();
         $("#" + y1 + "-" + x1 + "").attr("id", y2 + "-" + x2)
+
+        /*  $("#" + y1 + "-" + x1 + "").attr('src','');
+          let url = 'image/' + grid[y1][x1] + '.png'
+          $("#" + y2 + "-" + x2 + "").attr('src',url)
+          $("#" + y2 + "-" + x2 + "").css("display","block")
+          */
+        // $("#" + y1 + "-" + x1 + "").attr('src',url).slideUp('slow')
+
+
+
     }
 
 
     $('.btn-reinicio').click(function () {
 
         destruirCombos()
-       
-        // moverDulcesAdestruidos();
-        // console.log(grid)
 
     });
 
 
-    
-   
-        $(".candy").click(function(){
-            alert($(this).attr("class"))
-
-        })
 
     //llenar espacios vacios
 
@@ -289,71 +290,98 @@ $(document).ready(function () {
             for (let c = 0; c < cols; c++) {
                 if (arreglo[r][c] === 0) {
                     grid[r][c] = numRandom()
+
+                    var imageUrl = '<img class="candy ui-draggable ui-draggable-handle ui-droppable" src="image/' + grid[r][c] + '.png" style="height:' + altoCelda + 'px; position: absolute"  id=' + r + '-' + c + '>'
+                  
                     $("#" + r + "-" + c + "").remove();
-                    $("#d" + r + "-" + c + "").append('<img src="image/' + grid[r][c] + '.png" class="candy" style="height:' + altoCelda + 'px;  position: absolute;"  id=' + r + '-' + c + '>')
-                    
-                   
-                
+                    $("#d" + r + "-" + c + "").append(imageUrl)
+
                 }
             }
         }
         sleep(500).then(() => {
             destruirCombos()
         })
-      
+
     }
 
 
     //Mover dulces con el mouse
+
     var box = $(".candy");
     var mainCanvas = $(".panel-tablero");
-
-    function hacer(){
 
         box.draggable({
             containment: mainCanvas,
             helper: "clone",
-    
+
             start: function () {
                 $(this).css({
                     opacity: 0
                 });
-    
+
                 $(".candy").css("z-index", "0");
             },
-    
+
             stop: function () {
                 $(this).css({
                     opacity: 3
                 });
             }
         });
-    
+
         box.droppable({
             accept: box,
-    
+
             drop: function (event, ui) {
                 var draggable = ui.draggable;
                 var droppable = $(this);
                 var dragPos = draggable.position();
                 var dropPos = droppable.position();
-    
+
+
+                var CandyIdDrag = draggable.attr("id")
+                var candyIdDrop = droppable.attr("id")
+
+                let candyDragSplit =  CandyIdDrag.split("-")
+                let candyDropSplit =  candyIdDrop.split("-")
+
+                var gridValueDrag = grid[candyDragSplit[0]][candyDragSplit[1]]
+                var gridValueDrop = grid[candyDropSplit[0]][candyDropSplit[1]]
+                
+                grid[candyDragSplit[0]][candyDragSplit[1]]= gridValueDrop;
+                grid[candyDropSplit[0]][candyDropSplit[1]]= gridValueDrag;
+
+                droppable.attr("id",CandyIdDrag) 
+                draggable.attr("id",candyIdDrop) 
+               
+
+            
                 draggable.css({
                     left: dropPos.left + "px",
                     top: dropPos.top + "px",
                     "z-index": 20
                 });
-    
+
                 droppable.css("z-index", 10).animate({
                     left: dragPos.left,
                     top: dragPos.top
                 });
+                console.log(grid)
+
+               sleep(500).then(() => {
+                    destruirCombos()
+                    console.log(grid)
+                }
+                
+                )
+                
             }
         });
-    }
+    
 
 
-   
+
 
 
 

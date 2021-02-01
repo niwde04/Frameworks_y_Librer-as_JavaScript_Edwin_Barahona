@@ -1,6 +1,6 @@
 function colorTituloBlanco() {
 
-    $(".main-titulo").animate({
+    $(".main-titulo, .titulo-over").animate({
         color: "white"
     }, "slow", function () {
         colorTituloAmarillo();
@@ -9,12 +9,15 @@ function colorTituloBlanco() {
 
 function colorTituloAmarillo() {
 
-    $(".main-titulo").animate({
+    $(".main-titulo, .titulo-over").animate({
         color: "yellow"
     }, "slow", function () {
         colorTituloBlanco();
     })
 }
+
+colorTituloBlanco()
+
 
 function destruirCombo(y, x) {
     $("#" + y + "-" + x + "").toggle("puff")
@@ -30,7 +33,7 @@ function quitarDuplicados(arreglo) {
     return result
 }
 
-colorTituloBlanco()
+
 
 //funcion numero aleatorio
 function numRandom() {
@@ -51,25 +54,48 @@ $(document).ready(function () {
 
 
     //---------------------
-
     var rows = 7;
     var cols = 7;
     var grid = [];
+    var score = 0;
+    var moves = 0;
+    var flagInicio = 1;
 
-    for (var r = 0; r < rows; r++) {
-        grid[r] = [];
-        $(".panel-tablero").append('<div class= "row-' + r + '" ></>')
+    function llenarTablero() {
 
-        for (var c = 0; c < cols; c++) {
+        for (var r = 0; r < rows; r++) {
+            grid[r] = [];
+            $(".panel-tablero").append('<div class= "row-' + r + '" ></>')
 
-            grid[r][c] = numRandom()
+            for (var c = 0; c < cols; c++) {
 
-            $(".row-" + r + "").append('<div class="col-' + c + '" id="d' + r + '-' + c + '"> <img src="image/' + grid[r][c] + '.png" class="candy" style="height:' + altoCelda + 'px; position: absolute"  id=' + r + '-' + c + '></div>')
+                grid[r][c] = numRandom()
 
+                $(".row-" + r + "").append('<div class="col-' + c + '" id="d' + r + '-' + c + '"> <img src="image/' + grid[r][c] + '.png" class="candy" style="height:' + altoCelda + 'px; position: absolute"  id=' + r + '-' + c + '></div>')
+
+            }
         }
+
+        console.log(grid)
     }
 
-    console.log(grid)
+    function llenarTableroJuegoIniciado() {
+
+        for (var r = 0; r < rows; r++) {
+
+            $(".panel-tablero").append('<div class= "row-' + r + '" ></>')
+
+            for (var c = 0; c < cols; c++) {
+
+                $(".row-" + r + "").append('<div class="col-' + c + '" id="d' + r + '-' + c + '"> <img src="image/' + grid[r][c] + '.png" class="candy" style="height:' + altoCelda + 'px; position: absolute"  id=' + r + '-' + c + '></div>')
+
+            }
+        }
+
+        console.log(grid)
+    }
+
+    llenarTablero();
 
     // funcion buscar adyacentes 
 
@@ -94,27 +120,21 @@ $(document).ready(function () {
                 value: getCell(matrix, y - 1, x),
                 index: [(y - 1) + "-" + x]
             },
-
             right: {
                 value: getCell(matrix, y, x + 1),
                 index: [y, x + 1]
             },
-
             down: {
                 value: getCell(matrix, y + 1, x),
                 index: [y + 1, x]
 
             },
-
             left: {
                 value: getCell(matrix, y, x - 1),
-                //index: [y + "-" + x - 1]
+
                 index: [y + '-' + (x - 1)]
             }
-            // upRight:   getCell(matrix, y-1, x+1),
-            //downRight: getCell(matrix, y+1, x+1),
-            //downLeft:  getCell(matrix, y+1, x-1),
-            //upLeft:    getCell(matrix, y-1, x-1)
+
         }
     }
 
@@ -188,6 +208,9 @@ $(document).ready(function () {
             if (comboArreglo.length > 1) {
                 destruirCombo(comboArreglo[0], comboArreglo[1])
                 grid[comboArreglo[0]][comboArreglo[1]] = 0
+                score += 10;
+                $("#score-text").html(score);
+
             }
 
         }
@@ -198,9 +221,9 @@ $(document).ready(function () {
             })
         } else {
 
-
+            limpiarTablero();
+            prepararDulces();
         }
-
     }
 
 
@@ -240,42 +263,51 @@ $(document).ready(function () {
 
     }
 
-
-
-    /* $.fn.animateAppendTo = function (sel, speed) {
-         var $this = this,
-             newEle = $this.clone(true).appendTo(sel),
-             newPos = newEle.position();
-         newEle.hide();
-         $this.css('position', 'absolute').animate(newPos, speed, function () {
-             newEle.show();
-             $this.remove();
-         });
-         return newEle;
-     };*/
-    //render Dulces a espacios vacios
-
     function renderCandy(y1, x1, y2, x2) {
 
         $("#" + y1 + "-" + x1 + "").appendTo("#d" + y2 + "-" + x2 + "")
         $("#" + y2 + "-" + x2 + "").remove();
         $("#" + y1 + "-" + x1 + "").attr("id", y2 + "-" + x2)
 
-        /*  $("#" + y1 + "-" + x1 + "").attr('src','');
-          let url = 'image/' + grid[y1][x1] + '.png'
-          $("#" + y2 + "-" + x2 + "").attr('src',url)
-          $("#" + y2 + "-" + x2 + "").css("display","block")
-          */
-        // $("#" + y1 + "-" + x1 + "").attr('src',url).slideUp('slow')
-
-
-
     }
-
 
     $('.btn-reinicio').click(function () {
 
-        destruirCombos()
+       if (flagInicio == 1) {
+
+            destruirCombos();
+
+            $('#timer').timer({
+                countdown: true,
+                duration: '2m',
+                format: '%M:%S',
+                callback: function () {
+                    $(".panel-tablero").hide( 1000, function(){
+
+                        $(".main-container h1").append('<h3 class="titulo-over" >Juego Terminado</h3>')
+                    
+                     })
+                
+                      
+                     $(".panel-score").animate({
+                        width:'100%'
+                        }, 1000);
+                   // $('#timer').timer('reset');
+                }
+            });
+
+            $(this).html("Reiniciar")
+            flagInicio = 2;
+
+        } else {
+            location.reload();
+
+        }
+
+
+     //$(".panel-tablero").toggle( "drop" )
+ 
+    
 
     });
 
@@ -290,15 +322,14 @@ $(document).ready(function () {
             for (let c = 0; c < cols; c++) {
                 if (arreglo[r][c] === 0) {
                     grid[r][c] = numRandom()
-
-                    var imageUrl = '<img class="candy ui-draggable ui-draggable-handle ui-droppable" src="image/' + grid[r][c] + '.png" style="height:' + altoCelda + 'px; position: absolute"  id=' + r + '-' + c + '>'
-                  
-                    $("#" + r + "-" + c + "").remove();
-                    $("#d" + r + "-" + c + "").append(imageUrl)
-
                 }
             }
         }
+
+        limpiarTablero()
+
+
+
         sleep(500).then(() => {
             destruirCombos()
         })
@@ -306,10 +337,19 @@ $(document).ready(function () {
     }
 
 
+    //limpiar tablero
+
+    function limpiarTablero() {
+        $(".panel-tablero").empty();
+        llenarTableroJuegoIniciado();
+    }
+
     //Mover dulces con el mouse
 
-    var box = $(".candy");
-    var mainCanvas = $(".panel-tablero");
+    function prepararDulces() {
+
+        var box = $(".candy");
+        var mainCanvas = $(".panel-tablero");
 
         box.draggable({
             containment: mainCanvas,
@@ -343,20 +383,21 @@ $(document).ready(function () {
                 var CandyIdDrag = draggable.attr("id")
                 var candyIdDrop = droppable.attr("id")
 
-                let candyDragSplit =  CandyIdDrag.split("-")
-                let candyDropSplit =  candyIdDrop.split("-")
+                let candyDragSplit = CandyIdDrag.split("-")
+                let candyDropSplit = candyIdDrop.split("-")
 
                 var gridValueDrag = grid[candyDragSplit[0]][candyDragSplit[1]]
                 var gridValueDrop = grid[candyDropSplit[0]][candyDropSplit[1]]
-                
-                grid[candyDragSplit[0]][candyDragSplit[1]]= gridValueDrop;
-                grid[candyDropSplit[0]][candyDropSplit[1]]= gridValueDrag;
 
-                droppable.attr("id",CandyIdDrag) 
-                draggable.attr("id",candyIdDrop) 
-               
+                grid[candyDragSplit[0]][candyDragSplit[1]] = gridValueDrop;
+                grid[candyDropSplit[0]][candyDropSplit[1]] = gridValueDrag;
 
-            
+                droppable.attr("id", CandyIdDrag)
+                draggable.attr("id", candyIdDrop)
+
+                moves += 1;
+                $("#movimientos-text").html(moves);
+
                 draggable.css({
                     left: dropPos.left + "px",
                     top: dropPos.top + "px",
@@ -367,20 +408,16 @@ $(document).ready(function () {
                     left: dragPos.left,
                     top: dragPos.top
                 });
-                console.log(grid)
 
-               sleep(500).then(() => {
+
+                sleep(500).then(() => {
+
                     destruirCombos()
-                    console.log(grid)
-                }
-                
-                )
-                
+
+                })
             }
         });
-    
-
-
+    }
 
 
 

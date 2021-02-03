@@ -77,7 +77,7 @@ $(document).ready(function () {
             }
         }
 
-        console.log(grid)
+      //  console.log(grid)
     }
 
     function llenarTableroJuegoIniciado() {
@@ -93,7 +93,7 @@ $(document).ready(function () {
             }
         }
 
-        console.log(grid)
+    //    console.log(grid)
     }
 
     llenarTablero();
@@ -115,7 +115,7 @@ $(document).ready(function () {
     }
 
     function surroundings(matrix, y, x) {
-        // Directions are clockwise
+        
         return {
             up: {
                 value: getCell(matrix, y - 1, x),
@@ -325,12 +325,6 @@ $(document).ready(function () {
 
     //Mover dulces con el mouse
 
-    $(".candy").mousedown(function(){
-
-      console.log( $(this).attr("id"))
-
-    
-    });
 
 
     function prepararDulces() {

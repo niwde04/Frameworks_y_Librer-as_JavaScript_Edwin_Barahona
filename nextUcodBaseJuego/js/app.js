@@ -20,7 +20,7 @@ colorTituloBlanco()
 
 
 function destruirCombo(y, x) {
-    $("#" + y + "-" + x + "").toggle("pulsate",500)
+    $("#" + y + "-" + x + "").toggle("pulsate", 500)
 }
 
 function quitarDuplicados(arreglo) {
@@ -77,7 +77,7 @@ $(document).ready(function () {
             }
         }
 
-      //  console.log(grid)
+        //  console.log(grid)
     }
 
     function llenarTableroJuegoIniciado() {
@@ -93,7 +93,7 @@ $(document).ready(function () {
             }
         }
 
-    //    console.log(grid)
+        //    console.log(grid)
     }
 
     llenarTablero();
@@ -115,7 +115,7 @@ $(document).ready(function () {
     }
 
     function surroundings(matrix, y, x) {
-        
+
         return {
             up: {
                 value: getCell(matrix, y - 1, x),
@@ -189,8 +189,8 @@ $(document).ready(function () {
 
         let combosLimpios = quitarDuplicados(comboVS3)
 
-        console.log(combosLimpios)
-        console.log(grid)
+        //   console.log(combosLimpios)
+        //  console.log(grid)
 
         for (var i = 0; i < combosLimpios.length; i++) {
 
@@ -269,7 +269,7 @@ $(document).ready(function () {
 
             $('#timer').timer({
                 countdown: true,
-                duration: '3s',
+                duration: '2m',
                 format: '%M:%S',
                 callback: function () {
 
